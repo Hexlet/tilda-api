@@ -9,7 +9,7 @@ using TypeSpec.OpenAPI;
 })
 @server("https://api.tildacdn.info", "Tilda CDN API Server")
 @info(#{
-  description: "API для автоматической интеграции проекта на Тильде с собственным сайтом. Все запросы передаются методом GET, ответ в формате JSON. Лимит: 150 запросов в час.",
+  summary: "API для автоматической интеграции проекта на Тильде с собственным сайтом. Все запросы передаются методом GET, ответ в формате JSON. Лимит: 150 запросов в час.",
 })
 namespace TildaApi;
 
@@ -82,7 +82,7 @@ model PageSummary {
   descr: string;
   img: string;
   featureimg: string;
-  alias: string;
+  `alias`: string;
   date: string;
   sort: string;
   published: string;

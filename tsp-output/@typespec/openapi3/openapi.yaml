@@ -1,0 +1,563 @@
+openapi: 3.0.0
+info:
+  title: Tilda API
+  summary: 'API для автоматической интеграции проекта на Тильде с собственным сайтом. Все запросы передаются методом GET, ответ в формате JSON. Лимит: 150 запросов в час.'
+  version: 0.0.0
+tags: []
+paths:
+  /v1/getpage:
+    get:
+      operationId: Pages_getPage
+      parameters:
+        - $ref: '#/components/parameters/AuthParams.publickey'
+        - $ref: '#/components/parameters/AuthParams.secretkey'
+        - name: pageid
+          in: query
+          required: true
+          schema:
+            type: string
+          explode: false
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                anyOf:
+                  - type: object
+                    required:
+                      - status
+                      - result
+                    properties:
+                      status:
+                        type: string
+                        enum:
+                          - FOUND
+                      result:
+                        $ref: '#/components/schemas/PageBody'
+                  - $ref: '#/components/schemas/ErrorResponse'
+  /v1/getpageexport:
+    get:
+      operationId: Export_getPageExport
+      parameters:
+        - $ref: '#/components/parameters/AuthParams.publickey'
+        - $ref: '#/components/parameters/AuthParams.secretkey'
+        - name: pageid
+          in: query
+          required: true
+          schema:
+            type: string
+          explode: false
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                anyOf:
+                  - type: object
+                    required:
+                      - status
+                      - result
+                    properties:
+                      status:
+                        type: string
+                        enum:
+                          - FOUND
+                      result:
+                        $ref: '#/components/schemas/PageExportBody'
+                  - $ref: '#/components/schemas/ErrorResponse'
+  /v1/getpagefull:
+    get:
+      operationId: Pages_getPageFull
+      parameters:
+        - $ref: '#/components/parameters/AuthParams.publickey'
+        - $ref: '#/components/parameters/AuthParams.secretkey'
+        - name: pageid
+          in: query
+          required: true
+          schema:
+            type: string
+          explode: false
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                anyOf:
+                  - type: object
+                    required:
+                      - status
+                      - result
+                    properties:
+                      status:
+                        type: string
+                        enum:
+                          - FOUND
+                      result:
+                        $ref: '#/components/schemas/PageFull'
+                  - $ref: '#/components/schemas/ErrorResponse'
+  /v1/getpagefullexport:
+    get:
+      operationId: Export_getPageFullExport
+      parameters:
+        - $ref: '#/components/parameters/AuthParams.publickey'
+        - $ref: '#/components/parameters/AuthParams.secretkey'
+        - name: pageid
+          in: query
+          required: true
+          schema:
+            type: string
+          explode: false
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                anyOf:
+                  - type: object
+                    required:
+                      - status
+                      - result
+                    properties:
+                      status:
+                        type: string
+                        enum:
+                          - FOUND
+                      result:
+                        $ref: '#/components/schemas/PageExportFull'
+                  - $ref: '#/components/schemas/ErrorResponse'
+  /v1/getpageslist:
+    get:
+      operationId: Pages_getPagesList
+      parameters:
+        - $ref: '#/components/parameters/AuthParams.publickey'
+        - $ref: '#/components/parameters/AuthParams.secretkey'
+        - name: projectid
+          in: query
+          required: true
+          schema:
+            type: string
+          explode: false
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                anyOf:
+                  - type: object
+                    required:
+                      - status
+                      - result
+                    properties:
+                      status:
+                        type: string
+                        enum:
+                          - FOUND
+                      result:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/PageSummary'
+                  - $ref: '#/components/schemas/ErrorResponse'
+  /v1/getprojectinfo:
+    get:
+      operationId: Projects_getProjectInfo
+      parameters:
+        - $ref: '#/components/parameters/AuthParams.publickey'
+        - $ref: '#/components/parameters/AuthParams.secretkey'
+        - name: projectid
+          in: query
+          required: true
+          schema:
+            type: string
+          explode: false
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                anyOf:
+                  - type: object
+                    required:
+                      - status
+                      - result
+                    properties:
+                      status:
+                        type: string
+                        enum:
+                          - FOUND
+                      result:
+                        $ref: '#/components/schemas/ProjectInfo'
+                  - $ref: '#/components/schemas/ErrorResponse'
+  /v1/getprojectslist:
+    get:
+      operationId: Projects_getProjectsList
+      parameters:
+        - $ref: '#/components/parameters/AuthParams.publickey'
+        - $ref: '#/components/parameters/AuthParams.secretkey'
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                anyOf:
+                  - type: object
+                    required:
+                      - status
+                      - result
+                    properties:
+                      status:
+                        type: string
+                        enum:
+                          - FOUND
+                      result:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/ProjectListItem'
+                  - $ref: '#/components/schemas/ErrorResponse'
+components:
+  parameters:
+    AuthParams.publickey:
+      name: publickey
+      in: query
+      required: true
+      schema:
+        type: string
+      explode: false
+    AuthParams.secretkey:
+      name: secretkey
+      in: query
+      required: true
+      schema:
+        type: string
+      explode: false
+  schemas:
+    CssAsset:
+      type: object
+      required:
+        - from
+        - to
+      properties:
+        from:
+          type: string
+        to:
+          type: string
+    ErrorResponse:
+      type: object
+      required:
+        - status
+      properties:
+        status:
+          type: string
+          enum:
+            - ERROR
+        message:
+          type: string
+    ImageMapping:
+      type: object
+      required:
+        - from
+        - to
+      properties:
+        from:
+          type: string
+        to:
+          type: string
+    JsAsset:
+      type: object
+      required:
+        - from
+        - to
+      properties:
+        from:
+          type: string
+        to:
+          type: string
+        attrs:
+          type: array
+          items:
+            type: string
+    PageBody:
+      type: object
+      required:
+        - id
+        - projectid
+        - title
+        - descr
+        - img
+        - featureimg
+        - alias
+        - date
+        - sort
+        - published
+        - filename
+        - html
+      properties:
+        id:
+          type: string
+        projectid:
+          type: string
+        title:
+          type: string
+        descr:
+          type: string
+        img:
+          type: string
+        featureimg:
+          type: string
+        alias:
+          type: string
+        date:
+          type: string
+        sort:
+          type: string
+        published:
+          type: string
+        filename:
+          type: string
+        html:
+          type: string
+        js:
+          type: array
+          items:
+            type: string
+        css:
+          type: array
+          items:
+            type: string
+    PageExportBody:
+      type: object
+      required:
+        - id
+        - projectid
+        - title
+        - descr
+        - img
+        - featureimg
+        - alias
+        - date
+        - sort
+        - published
+        - filename
+        - html
+      properties:
+        id:
+          type: string
+        projectid:
+          type: string
+        title:
+          type: string
+        descr:
+          type: string
+        img:
+          type: string
+        featureimg:
+          type: string
+        alias:
+          type: string
+        date:
+          type: string
+        sort:
+          type: string
+        published:
+          type: string
+        filename:
+          type: string
+        html:
+          type: string
+        images:
+          type: array
+          items:
+            $ref: '#/components/schemas/ImageMapping'
+        js:
+          type: array
+          items:
+            $ref: '#/components/schemas/JsAsset'
+        css:
+          type: array
+          items:
+            $ref: '#/components/schemas/CssAsset'
+    PageExportFull:
+      type: object
+      required:
+        - id
+        - projectid
+        - title
+        - descr
+        - img
+        - featureimg
+        - alias
+        - date
+        - sort
+        - published
+        - filename
+        - html
+      properties:
+        id:
+          type: string
+        projectid:
+          type: string
+        title:
+          type: string
+        descr:
+          type: string
+        img:
+          type: string
+        featureimg:
+          type: string
+        alias:
+          type: string
+        date:
+          type: string
+        sort:
+          type: string
+        published:
+          type: string
+        filename:
+          type: string
+        html:
+          type: string
+        images:
+          type: array
+          items:
+            $ref: '#/components/schemas/ImageMapping'
+    PageFull:
+      type: object
+      required:
+        - id
+        - projectid
+        - title
+        - descr
+        - img
+        - featureimg
+        - alias
+        - date
+        - sort
+        - published
+        - filename
+        - html
+      properties:
+        id:
+          type: string
+        projectid:
+          type: string
+        title:
+          type: string
+        descr:
+          type: string
+        img:
+          type: string
+        featureimg:
+          type: string
+        alias:
+          type: string
+        date:
+          type: string
+        sort:
+          type: string
+        published:
+          type: string
+        filename:
+          type: string
+        html:
+          type: string
+    PageSummary:
+      type: object
+      required:
+        - id
+        - projectid
+        - title
+        - descr
+        - img
+        - featureimg
+        - alias
+        - date
+        - sort
+        - published
+        - filename
+      properties:
+        id:
+          type: string
+        projectid:
+          type: string
+        title:
+          type: string
+        descr:
+          type: string
+        img:
+          type: string
+        featureimg:
+          type: string
+        alias:
+          type: string
+        date:
+          type: string
+        sort:
+          type: string
+        published:
+          type: string
+        filename:
+          type: string
+    ProjectInfo:
+      type: object
+      required:
+        - id
+        - title
+        - descr
+        - customdomain
+        - export_csspath
+        - export_jspath
+        - export_imgpath
+        - indexpageid
+        - customcsstext
+        - favicon
+        - page404id
+      properties:
+        id:
+          type: string
+        title:
+          type: string
+        descr:
+          type: string
+        customdomain:
+          type: string
+        export_csspath:
+          type: string
+        export_jspath:
+          type: string
+        export_imgpath:
+          type: string
+        indexpageid:
+          type: string
+        customcsstext:
+          type: string
+        favicon:
+          type: string
+        page404id:
+          type: string
+        images:
+          type: array
+          items:
+            $ref: '#/components/schemas/ImageMapping'
+    ProjectListItem:
+      type: object
+      required:
+        - id
+        - title
+        - descr
+      properties:
+        id:
+          type: string
+        title:
+          type: string
+        descr:
+          type: string
+servers:
+  - url: https://api.tildacdn.info
+    description: Tilda CDN API Server
+    variables: {}
