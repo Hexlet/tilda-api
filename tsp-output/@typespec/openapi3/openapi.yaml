@@ -9,8 +9,6 @@ paths:
     get:
       operationId: Pages_getPage
       parameters:
-        - $ref: '#/components/parameters/AuthParams.publickey'
-        - $ref: '#/components/parameters/AuthParams.secretkey'
         - name: pageid
           in: query
           required: true
@@ -40,8 +38,6 @@ paths:
     get:
       operationId: Export_getPageExport
       parameters:
-        - $ref: '#/components/parameters/AuthParams.publickey'
-        - $ref: '#/components/parameters/AuthParams.secretkey'
         - name: pageid
           in: query
           required: true
@@ -71,8 +67,6 @@ paths:
     get:
       operationId: Pages_getPageFull
       parameters:
-        - $ref: '#/components/parameters/AuthParams.publickey'
-        - $ref: '#/components/parameters/AuthParams.secretkey'
         - name: pageid
           in: query
           required: true
@@ -102,8 +96,6 @@ paths:
     get:
       operationId: Export_getPageFullExport
       parameters:
-        - $ref: '#/components/parameters/AuthParams.publickey'
-        - $ref: '#/components/parameters/AuthParams.secretkey'
         - name: pageid
           in: query
           required: true
@@ -133,8 +125,6 @@ paths:
     get:
       operationId: Pages_getPagesList
       parameters:
-        - $ref: '#/components/parameters/AuthParams.publickey'
-        - $ref: '#/components/parameters/AuthParams.secretkey'
         - name: projectid
           in: query
           required: true
@@ -166,8 +156,6 @@ paths:
     get:
       operationId: Projects_getProjectInfo
       parameters:
-        - $ref: '#/components/parameters/AuthParams.publickey'
-        - $ref: '#/components/parameters/AuthParams.secretkey'
         - name: projectid
           in: query
           required: true
@@ -196,9 +184,7 @@ paths:
   /v1/getprojectslist:
     get:
       operationId: Projects_getProjectsList
-      parameters:
-        - $ref: '#/components/parameters/AuthParams.publickey'
-        - $ref: '#/components/parameters/AuthParams.secretkey'
+      parameters: []
       responses:
         '200':
           description: The request has succeeded.
@@ -220,22 +206,10 @@ paths:
                         items:
                           $ref: '#/components/schemas/ProjectListItem'
                   - $ref: '#/components/schemas/ErrorResponse'
+security:
+  - PublicKeyAuth: []
+    SecretKeyAuth: []
 components:
-  parameters:
-    AuthParams.publickey:
-      name: publickey
-      in: query
-      required: true
-      schema:
-        type: string
-      explode: false
-    AuthParams.secretkey:
-      name: secretkey
-      in: query
-      required: true
-      schema:
-        type: string
-      explode: false
   schemas:
     CssAsset:
       type: object
@@ -557,6 +531,63 @@ components:
           type: string
         descr:
           type: string
+    PublicKeyAuth:
+      type: object
+      required:
+        - type
+        - in
+        - name
+      properties:
+        type:
+          type: string
+          enum:
+            - apiKey
+          description: API key authentication
+        in:
+          type: string
+          enum:
+            - query
+          description: location of the API key
+        name:
+          type: string
+          enum:
+            - publickey
+          description: name of the API key
+      description: Public API key
+    SecretKeyAuth:
+      type: object
+      required:
+        - type
+        - in
+        - name
+      properties:
+        type:
+          type: string
+          enum:
+            - apiKey
+          description: API key authentication
+        in:
+          type: string
+          enum:
+            - query
+          description: location of the API key
+        name:
+          type: string
+          enum:
+            - secretkey
+          description: name of the API key
+      description: Secret API key
+  securitySchemes:
+    PublicKeyAuth:
+      type: apiKey
+      in: query
+      name: publickey
+      description: Public API key
+    SecretKeyAuth:
+      type: apiKey
+      in: query
+      name: secretkey
+      description: Secret API key
 servers:
   - url: https://api.tildacdn.info
     description: Tilda CDN API Server

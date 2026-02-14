@@ -11,6 +11,7 @@ using TypeSpec.OpenAPI;
 @info(#{
   summary: "API для автоматической интеграции проекта на Тильде с собственным сайтом. Все запросы передаются методом GET, ответ в формате JSON. Лимит: 150 запросов в час.",
 })
+@useAuth([PublicKeyAuth, SecretKeyAuth])
 namespace TildaApi;
 
 // ─── Common models ───
@@ -31,12 +32,13 @@ model CssAsset {
   to: string;
 }
 
-// ─── Auth query params ───
+// ─── Auth ───
 
-model AuthParams {
-  @query publickey: string;
-  @query secretkey: string;
-}
+@doc("Public API key")
+model PublicKeyAuth is ApiKeyAuth<ApiKeyLocation.query, "publickey">;
+
+@doc("Secret API key")
+model SecretKeyAuth is ApiKeyAuth<ApiKeyLocation.query, "secretkey">;
 
 // ─── Response wrappers ───
 
@@ -121,14 +123,11 @@ model PageExportFull {
 interface Projects {
   @route("getprojectslist")
   @get
-  getProjectsList(
-    ...AuthParams,
-  ): SuccessResponse<ProjectListItem[]> | ErrorResponse;
+  getProjectsList(): SuccessResponse<ProjectListItem[]> | ErrorResponse;
 
   @route("getprojectinfo")
   @get
   getProjectInfo(
-    ...AuthParams,
     @query projectid: string,
   ): SuccessResponse<ProjectInfo> | ErrorResponse;
 }
@@ -138,21 +137,18 @@ interface Pages {
   @route("getpageslist")
   @get
   getPagesList(
-    ...AuthParams,
     @query projectid: string,
   ): SuccessResponse<PageSummary[]> | ErrorResponse;
 
   @route("getpage")
   @get
   getPage(
-    ...AuthParams,
     @query pageid: string,
   ): SuccessResponse<PageBody> | ErrorResponse;
 
   @route("getpagefull")
   @get
   getPageFull(
-    ...AuthParams,
     @query pageid: string,
   ): SuccessResponse<PageFull> | ErrorResponse;
 }
@@ -162,14 +158,12 @@ interface Export {
   @route("getpageexport")
   @get
   getPageExport(
-    ...AuthParams,
     @query pageid: string,
   ): SuccessResponse<PageExportBody> | ErrorResponse;
 
   @route("getpagefullexport")
   @get
   getPageFullExport(
-    ...AuthParams,
     @query pageid: string,
   ): SuccessResponse<PageExportFull> | ErrorResponse;
 }
