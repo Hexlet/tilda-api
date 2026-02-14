@@ -13,7 +13,7 @@ organization:
 targets:
   ruby:
     edition: ruby.2025-10-08
-    gem_name: tilda
+    gem_name: tilda-ruby
     production_repo: Hexlet/tilda-ruby
     publish:
       rubygems: false
