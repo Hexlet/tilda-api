@@ -35,10 +35,18 @@ model CssAsset {
 // ─── Auth ───
 
 @doc("Public API key")
-model PublicKeyAuth is ApiKeyAuth<ApiKeyLocation.query, "publickey">;
+model PublicKeyAuth {
+  type: AuthType.apiKey;
+  in: ApiKeyLocation.query;
+  name: "publickey";
+}
 
 @doc("Secret API key")
-model SecretKeyAuth is ApiKeyAuth<ApiKeyLocation.query, "secretkey">;
+model SecretKeyAuth {
+  type: AuthType.apiKey;
+  in: ApiKeyLocation.query;
+  name: "secretkey";
+}
 
 // ─── Response wrappers ───
 

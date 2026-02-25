@@ -63,21 +63,21 @@ client_settings:
       auth:
         security_scheme: PublicKeyAuth
       description: Tilda API public key
-      read_env: TILDA_PUBLIC_KEY
     secretkey:
       type: string
       nullable: true
       auth:
         security_scheme: SecretKeyAuth
       description: Tilda API secret key
-      read_env: TILDA_SECRET_KEY
 
 readme:
   example_requests:
     default:
       type: request
       endpoint: get /v1/getprojectslist
+      params: {}
     headline:
       type: request
       endpoint: get /v1/getprojectslist
+      params: {}
 
